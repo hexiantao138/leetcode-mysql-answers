@@ -1,56 +1,98 @@
 
-/*leetcode 175Ìâ×éºÏÁ½¸ö±í*/
+/*leetcode 175é¢˜ç»„åˆä¸¤ä¸ªè¡¨*/
 SELECT P.FirstName, P.LastName, A.City, A.State 
 FROM Person AS P
 LEFT JOIN Address AS A
 ON P.PersonId = A.PersonId
 
-/*leetcode 176ÌâµÚ¶ş¸ßµÄĞ½Ë®*/
+/*leetcode 176é¢˜ç¬¬äºŒé«˜çš„è–ªæ°´*/
 SELECT IFNULL(
     (SELECT MAX(Salary) FROM Employee WHERE Salary != (SELECT MAX(Salary) FROM Employee)),NULL) AS SecondHighestSalary
 
-/*leetcode 178Ìâ·ÖÊıÅÅÃû*/
+/*leetcode 178é¢˜åˆ†æ•°æ’å*/
 SELECT s1.Score,COUNT(DISTINCT(s2.score)) AS 'Rank'
 FROM Scores s1,Scores s2
 WHERE s1.score<=s2.score
 GROUP BY s1.Id
 ORDER BY s1.Score DESC
 
-/*leetcode 181Ìâ³¬¹ı¾­ÀíÊÕÈëµÄÔ±¹¤*/
+/*leetcode 181é¢˜è¶…è¿‡ç»ç†æ”¶å…¥çš„å‘˜å·¥*/
 SELECT e.Name AS Employee
 FROM Employee e, Employee m
 WHERE e.ManagerId = m.Id AND e.Salary > m.Salary
 
-/*leetcode 182Ìâ²éÕÒÖØ¸´µÄµç×ÓÓÊÏä*/
+/*leetcode 182é¢˜æŸ¥æ‰¾é‡å¤çš„ç”µå­é‚®ç®±*/
 SELECT Email
 FROM Person AS P
 GROUP BY P.Email
 HAVING COUNT(P.Email) > 1
 
-/*leetcode 183Ìâ´Ó²»¶©¹ºµÄ¿Í»§*/
+/*leetcode 183é¢˜ä»ä¸è®¢è´­çš„å®¢æˆ·*/
 SELECT C.Name as Customers
 FROM Customers AS C
 LEFT JOIN Orders AS O
 ON C.Id = O.CustomerId
 WHERE O.CustomerId IS NULL
 
-/*leetcode 196ÌâÉ¾³ıÖØ¸´µÄµç×ÓÓÊÏä*/
+/*leetcode 196é¢˜åˆ é™¤é‡å¤çš„ç”µå­é‚®ç®±*/
 DELETE P1
 FROM Person P1, Person P2
 WHERE P1.Email = P2.Email AND P1.Id > P2.Id
 
-/*leetcode 197ÌâÉÏÉıµÄÎÂ¶È*/
+/*leetcode 197é¢˜ä¸Šå‡çš„æ¸©åº¦*/
 SELECT B.Id
 FROM Weather AS A, Weather AS B
 WHERE A.Temperature < B.Temperature AND
 (SELECT TIMESTAMPDIFF(DAY,A.RecordDate, B.RecordDate))=1
 
-/*leetcode 511ÌâÓÎÏ·Íæ·¨·ÖÎö1*/
+/*leetcode 511é¢˜æ¸¸æˆç©æ³•åˆ†æ1*/
 SELECT player_id, min(event_date) AS first_login
 FROM Activity
 GROUP BY player_id
 
-/*leetcode 619ÌâÖ»³öÏÖÒ»´ÎµÄ×î´óÊı×Ö*/
+/*leetcode 619é¢˜åªå‡ºç°ä¸€æ¬¡çš„æœ€å¤§æ•°å­—*/
 SELECT MAX(num) AS num
 FROM (SELECT num, COUNT(num) AS summary FROM my_numbers GROUP BY num) AS new_table
 WHERE summary=1
+                      
+/*leetcode 180é¢˜è¿ç»­å‡ºç°çš„æ•°å­—*/
+SELECT DISTINCT L1.Num AS ConsecutiveNums
+FROM Logs AS L1, Logs AS L2, Logs AS L3
+WHERE L1.Id-L2.Id=1 AND L2.Id-L3.Id=1 AND L1.Num=L2.Num AND L2.Num=L3.Num
+                      
+/*leetcode 184é¢˜éƒ¨é—¨å·¥èµ„æœ€é«˜çš„å‘˜å·¥*/
+SELECT D.Name AS Department, N3.Name AS Employee, N3.Salary AS Salary
+FROM(SELECT N2.DepartmentId AS Department, N2.Name AS Name, N2.Salary AS Salary
+FROM (SELECT E1.DepartmentId, E1.Name, MAX(E1.Salary) AS Salary
+FROM Employee AS E1
+GROUP BY E1.DepartmentId) AS N1, Employee AS N2
+WHERE N2.Salary = N1.Salary AND N2.DepartmentId = N1.DepartmentId) AS N3, Department AS D
+WHERE N3.Department = D.Id
+                      
+/*leetcode 512é¢˜æ¸¸æˆç©æ³•åˆ†æ2*/
+SELECT A.player_id, A.device_id
+FROM(SELECT player_id, device_id, MIN(event_date) AS event_date
+FROM Activity
+GROUP BY player_id) AS N, Activity AS A
+WHERE A.event_date = N.event_date AND A.player_id = N.player_id
+                      
+/*letcode 577é¢˜å‘˜å·¥å¥–é‡‘*/
+SELECT name, bonus
+FROM (SELECT E.empId, E.name, B.bonus
+FROM Employee AS E
+LEFT JOIN Bonus AS B
+ON E.empId = B.empId) AS new_table
+WHERE bonus < 1000 OR bonus IS NULL
+
+/*leetcode 584é¢˜å¯»æ‰¾ç”¨æˆ·æ¨èäºº*/                      
+SELECT name
+FROM customer
+WHERE referee_id !=2 OR referee_id IS NULL  
+                      
+/*leetcode 586é¢˜è®¢å•æœ€å¤šçš„å®¢æˆ·*/
+SELECT customer_number
+FROM Orders
+GROUP BY customer_number
+ORDER BY COUNT(*) DESC
+LIMIT 1
+                                          
